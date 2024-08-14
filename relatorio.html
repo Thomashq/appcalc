@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultados</title>
+    <link rel="stylesheet" href="css/relatorio.css">
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Custom CSS to adjust column widths */
+        .table th, .table td {
+            vertical-align: middle; /* Center content vertically */
+        }
+        .table th {
+            width: 50%; /* Allocate 30% for the label column */
+        }
+        .table td {
+            width:50%; /* Allocate 70% for the result column */
+        }
+    </style>
+</head>
+
+<body>
+    <header class="bg-primary text-white text-center py-3">
+        <h1>AppCalc</h1>
+    </header>
+
+    <main class="container my-4">
+        <div class="content">
+            <table class="table table-bordered table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th colspan="2" class="text-center">Resultados</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Momento Fletor (kN.m)</td>
+                        <td id="Md">...</td>
+                    </tr>
+                    <tr>
+                        <td>Armadura Longitudinal (cm²)</td>
+                        <td id="nSimboloFiBitola">...</td>
+                    </tr>
+                    <tr>
+                        <td>Área de Aço Calculada (cm²)</td>
+                        <td id="As">...</td>
+                    </tr>
+                    <tr>
+                        <td>Área de Aço Efetiva (cm²)</td>
+                        <td id="Asef">...</td>
+                    </tr>
+                    <tr>
+                        <td>Esforço Cortante (kN)</td>
+                        <td id="Vsd">...</td>
+                    </tr>
+                    <tr>
+                        <td>Força Cortante Resistente de Cálculo (kN)</td>
+                        <td id="Vrd2">...</td>
+                    </tr>
+                    <tr>
+                        <td>Armadura Transversal (cm²)</td>
+                        <td id="detalhamentoFinalDosEstribos">...</td>
+                    </tr>
+                    <tr>
+                        <td>Flecha Imediata (cm)</td>
+                        <td id="a_acao_permanenteCentimetro">...</td>
+                    </tr>
+                    <tr>
+                        <td>Flecha Diferida no Tempo (cm)</td>
+                        <td id="aflu">...</td>
+                    </tr>
+                    <tr>
+                        <td>Fissuração (mm)</td>
+                        <td id="wk">...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <footer class="bg-primary text-white text-center py-3">
+        <p>&copy; NarutoCearence</p>
+        <p>Todos os direitos reservados</p>
+        <p><small>Desenvolvido por: Euclides da Cunha</small></p>
+    </footer>
+
+    <script>
+        // Function to format numbers with two decimal places
+        function formatNumber(value) {
+            if (!isNaN(value)) {
+                return parseFloat(value).toFixed(2);
+            }
+            return value;
+        }
+
+        // Function to update the table values
+        function updateContent() {
+            const fields = {
+                Md: 'Md',
+                nSimboloFiBitola: function () {
+                    const n = localStorage.getItem('n') || '...';
+                    const simboloFi = localStorage.getItem('SIMBOLO_FI') || 'φ';
+                    const bitola = localStorage.getItem('bitolautilizada');
+                    return `${n} ${simboloFi} ${bitola}`;
+                },
+                As: 'As',
+                Asef: 'Asef',
+                Vsd: 'Vsd',
+                Vrd2: 'Vrd2',
+                detalhamentoFinalDosEstribos: 'detalhamentoFinalDosEstribos',
+                a_acao_permanenteCentimetro: 'a_acao_permanenteCentimetro',
+                aflu: 'aflu',
+                wk: 'wk'
+            };
+
+            Object.keys(fields).forEach(field => {
+                if (typeof fields[field] === 'function') {
+                    document.getElementById(field).innerText = fields[field]();
+                } else {
+                    const value = localStorage.getItem(fields[field]);
+                    if (value) {
+                        document.getElementById(fields[field]).innerText = formatNumber(value);
+                    }
+                }
+            });
+        }
+
+        window.onload = updateContent;
+    </script>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+
+</html>

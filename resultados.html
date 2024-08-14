@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabela HTML</title>
+    <link rel="stylesheet" href="css/resultados.css">
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <header class="bg-primary text-white text-center py-3">
+        <h1>AppCalc</h1>
+    </header>
+
+    <main class="container my-4">
+        <div class="content">
+            <table class="table table-bordered table-hover">
+                <thead style="background-color: #343a40; color: white;">
+                    <tr>
+                        <th colspan="2" class="text-center">Resultados</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Domínio da viga</td>
+                        <td id="domínio">...</td>
+                    </tr>
+                    <tr>
+                        <td>Flecha da Viga (cm)</td>
+                        <td id="a_acao_permanenteCentimetro">...</td>
+                    </tr>
+                    <tr>
+                        <td>Fissuração da Viga (mm)</td>
+                        <td id="wk">...</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="text-center">Verificação do estado limite último</th>
+                    </tr>
+                    <tr>
+                        <td class="text-center">
+                            <button type="button" id="DET" class="btn btn-primary btn-block">DETALHAMENTO</button>
+                        </td>
+                        <td class="text-center">
+                            <button type="button" id="relatorio" class="btn btn-primary btn-block">RELATÓRIO</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <footer class="bg-primary text-white text-center py-3">
+        <p>&copy; NarutoCearence</p>
+        <p>Todos os direitos reservados</p>
+        <p><small>Desenvolvido por: Euclides da Cunha</small></p>
+    </footer>
+
+    <script>
+        document.getElementById('relatorio').addEventListener('click', function () {
+            window.location.href = 'relatorio.html';
+        });
+
+        document.getElementById('DET').addEventListener('click', function () {
+            window.location.href = 'tela_imagem.html';
+        });
+
+        // Function to format numbers to 2 decimal places
+        function formatToTwoDecimals(value) {
+            return parseFloat(value).toFixed(2);
+        }
+
+        // Function to format scientific notation numbers
+        function formatScientific(value) {
+            if (!isNaN(value)) {
+                return parseFloat(value).toExponential(2);
+            }
+            return value;
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var fields = {
+                domínio: 'dominio',
+                a_acao_permanenteCentimetro: 'a_acao_permanenteCentimetro',
+                wk: 'wk'
+            };
+
+            Object.keys(fields).forEach(function (field) {
+                var element = document.getElementById(field);
+                if (element) {
+                    var value = localStorage.getItem(fields[field]);
+                    if (value) {
+                        if (!isNaN(value)) {
+                            value = formatToTwoDecimals(value);    
+                        }
+                        element.innerText = value;
+                    } else {
+                        element.innerText = 'N/A'; // Exibir "N/A" caso o valor não exista
+                    }
+                    console.log(`Elemento com ID "${field}" encontrado e texto atualizado com valor: ${element.innerText}`);
+                } else {
+                    console.error(`Elemento com ID "${field}" não encontrado.`);
+                }
+            });
+        });
+    </script>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

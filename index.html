@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="./css/ibeam.css">
+
+  <!-- icones -->
+  <link rel="shortcut icon" href="#" width="32" height="32">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&display=swap" rel="stylesheet">
+  <title>AppWeb</title>
+  <style>
+    /* Custom styles */
+    .rectangle-container {
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    canvas {
+      border: 1px solid #4682b4;
+    }
+
+    footer {
+      background-color: #007bff;
+      color: white;
+      text-align: center;
+      padding: 1rem 0;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
+
+    .btn-calcular-container {
+      text-align: center;
+      margin-top: 1rem;
+      margin-bottom: 7rem; /* Add margin to prevent the button from sticking to the footer */
+    }
+
+    .card {
+      height: 100%;
+    }
+
+    .card-body {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .col-md-4 {
+      flex: 1;
+      min-width: 300px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <header class="bg-primary text-white text-center py-3">
+    <h1>AppCalc</h1>
+  </header>
+
+  <section class="container my-4">
+    <div class="row">
+      <div class="col-md-4 mb-4">
+        <div class="card">
+          <div class="card-body">
+            <form onsubmit="event.preventDefault(); calcularSoma()">
+              <h2 class="card-title text-center">Especificação da Seção</h2>
+
+              <div class="form-group">
+                <label for="h">h (m)</label>
+                <input type="text" id="h" class="form-control" required placeholder="ex : 17.0800" step="0.0001" oninput="updateRectangle()">
+              </div>
+              
+              <div class="form-group">
+                <label for="bw">bw (m)</label>
+                <input type="text" id="bw" class="form-control" required placeholder="ex : 17.0800" step="0.0001" oninput="updateRectangle()">
+              </div>
+              
+              <div class="form-group">
+                <label for="L">L (m)</label>
+                <input type="text" id="L" class="form-control" required placeholder="ex : 90" step="0.0001">
+              </div>
+              
+
+              <div id="rectangle-container" class="rectangle-container">
+                <canvas id="rectangleCanvas" width="300" height="200"></canvas>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 mb-4">
+        <div class="card">
+          <div class="card-body">
+            <form onsubmit="event.preventDefault(); calcularSoma()">
+              <h2 class="card-title text-center">Solicitação</h2>
+
+              <div class="form-group">
+                <label for="Mk">Mk (KNm)</label>
+                <input type="text" id="Mk" class="form-control" required placeholder="ex : 17.0800" step="0.0001">
+              </div>
+
+              <div class="form-group">
+                <label for="q">q (KN/m)</label>
+                <input type="text" id="q" class="form-control" required placeholder="ex : 17.0800" step="0.0001">
+              </div>
+
+              <div class="form-group">
+                <label for="g">g (KN/m)</label>
+                <input type="text" id="g" class="form-control" required placeholder="ex : 17.0800" step="0.0001">
+              </div>
+
+              <div class="form-group">
+                <label for="Vk">Vk (KN)</label>
+                <input type="text" id="Vk" class="form-control" required placeholder="ex : 17.0800" step="0.0001">
+              </div>
+
+              <h2 class="card-title text-center">Material</h2>
+
+              <div class="form-group">
+                <label for="Fck">Concreto</label>
+                <select id="Fck" class="form-control">
+                  <option value="20MPa">20MPa</option>
+                  <option value="25MPa">25MPa</option>
+                  <option value="30MPa">30MPa</option>
+                  <option value="40MPa">40MPa</option>
+                  <option value="50MPa">50MPa</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="Fyk_Long">Aço da Longitudinal</label>
+                <select id="Fyk_Long" class="form-control">
+                  <option value="CA-50">CA-50</option>
+                  <option value="CA-60">CA-60</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="Fyk_Trans">Aço da Transversal</label>
+                <select id="Fyk_Trans" class="form-control">
+                  <option value="CA-50">CA-50</option>
+                  <option value="CA-60">CA-60</option>
+                </select>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 mb-4">
+        <div class="card">
+          <div class="card-body">
+            <form onsubmit="event.preventDefault(); calcularSoma()">
+              <h2 class="card-title text-center">Detalhamento</h2>
+
+              <div class="form-group">
+                <label for="armLong">Armadura Longitudinal</label>
+                <select id="armLong" class="form-control">
+                  <option value="5 φ">5 φ</option>
+                  <option value="6,3 φ">6,3 φ</option>
+                  <option value="8 φ">8 φ</option>
+                  <option value="10 φ">10 φ</option>
+                  <option value="12,5 φ">12,5 φ</option>
+                  <option value="16 φ">16 φ</option>
+                  <option value="20 φ">20 φ</option>
+                  <option value="22,5 φ">22,5 φ</option>
+                  <option value="25 φ">25 φ</option>
+                  <option value="35 φ">35 φ</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="armTrans">Armadura Transversal</label>
+                <select id="armTrans" class="form-control">
+                  <option value="5 φ">5 φ</option>
+                  <option value="6,3 φ">6,3 φ</option>
+                </select>
+              </div>
+
+              <h2 class="card-title text-center">Classe de Agressividade</h2>
+
+              <div class="form-group">
+                <select id="classe" class="form-control">
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                </select>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="btn-calcular-container">
+    <button id="calcula" class="btn btn-primary" onclick="calcularSoma()">Calcular</button>
+  </div>
+
+  <footer>
+    <p>&copy; 2024 AppCalc. Todos os direitos reservados.</p>
+  </footer>
+  <script src = "js/iBeam.js"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <script>
+  function updateRectangle() {
+    const canvas = document.getElementById('rectangleCanvas');
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const heightInput = document.getElementById('h').value;
+    const widthInput = document.getElementById('bw').value;
+
+    if (heightInput && widthInput) {
+      const height = parseFloat(heightInput);
+      const width = parseFloat(widthInput);
+
+      // Escalando os valores para caber no canvas
+      const maxHeight = canvas.height - 20; // Deixa um pequeno espaço ao redor
+      const maxWidth = canvas.width - 20; // Deixa um pequeno espaço ao redor
+      const scale = Math.min(maxHeight / height, maxWidth / width);
+
+      const rectHeight = height * scale;
+      const rectWidth = width * scale;
+
+      const x = (canvas.width - rectWidth) / 2;
+      const y = (canvas.height - rectHeight) / 2;
+
+      ctx.fillStyle = "#add8e6";
+      ctx.fillRect(x, y, rectWidth, rectHeight);
+    }
+  }
+</script>
+</body>
+
+</html>
