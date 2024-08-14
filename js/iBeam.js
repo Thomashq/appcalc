@@ -41,7 +41,7 @@ function saveToLocalStorage(key, value) {
 }
 
 function fetchData(dataToSend) {
-    const apiUrl = 'http://127.0.0.1:5000/calculate';
+    const apiUrl = 'https://afternoon-sierra-82120-c52493793f4d.herokuapp.com/calculate';;
     const requestOptions = {
         method: 'POST',
         headers: {
